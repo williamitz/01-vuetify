@@ -59,7 +59,9 @@
 
 <script>
 
-import router from '../router'
+import router from '../router';
+import axios from 'axios';
+
 export default {
     name: 'Login',
     data() {
@@ -72,12 +74,20 @@ export default {
     methods: {
         onLogin() {
             this.loading = true;
-            setTimeout(() => {
+
+            axios.post('/login', { user: this.user, password: this.password })
+            .then( (res) => {
+                console.log('respuesta server', res);
                 this.loading = false;
-                router.push('dashboard');
-            }, 2000);
-            console.log('usuario', this.user);
-            console.log('contraseña', this.password);
+                if( res.data !== [] ){
+
+                    router.push('dashboard');
+                }
+            }).catch( (error) => {
+                console.error('ha ocurrido un error', error);
+                
+            });
+            
         }
     },
 }
